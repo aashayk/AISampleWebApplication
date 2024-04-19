@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -26,11 +28,19 @@ public class EmployeeDetails {
 	private String lastName;
 	
 	@NotNull
+	@Min(21)
+	@Max(60)
+	private short age;
+	
+	@NotNull
 	@Email
 	private String email;
 	
 	@NotNull
 	@Pattern(regexp = "^[0-9]{10}$")
 	private String mobile;
+	
+	@NotNull
+	private String designation;
 
 }

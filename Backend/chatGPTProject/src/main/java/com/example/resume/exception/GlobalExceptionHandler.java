@@ -12,5 +12,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> recordNotFound(RecordNotFoundException exception){
 		return new ResponseEntity<>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(AlreadyExistException.class)
+	public ResponseEntity<String> alreadyExist(AlreadyExistException exception){
+		return new ResponseEntity<>(exception.getMessage(),HttpStatus.CONFLICT);
+	}
 
 }

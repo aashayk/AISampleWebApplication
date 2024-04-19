@@ -6,5 +6,7 @@ public class ErrorMessage {
 	public static final String EMPTY_RECORDS = "Records are empty";
 	
 	public static final String RECORD_NOT_FOUND = "Record not found";
+	
+	public static final String ALREADY_EXIST = "Record already exist";
 
 }
