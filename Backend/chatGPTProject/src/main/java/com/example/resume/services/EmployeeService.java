@@ -3,6 +3,7 @@ package com.example.resume.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.resume.dao.EmployeeDao;
@@ -16,6 +17,9 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeDao dao;
+
+	@Value("${spring.servlet.multipart.location}")
+	private String uploadDir;
 
 	public List<EmployeeDetails> getAllEmployee() {
 		List<EmployeeDetails> list = dao.findAll();
@@ -44,4 +48,5 @@ public class EmployeeService {
 		return dao.save(emp);
 
 	}
+
 }

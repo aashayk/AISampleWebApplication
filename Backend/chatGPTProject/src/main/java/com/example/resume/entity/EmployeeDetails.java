@@ -33,6 +33,10 @@ public class EmployeeDetails {
 	private short age;
 	
 	@NotNull
+	@Min(2)
+	private short yearsOfExperience;
+	
+	@NotNull
 	@Email
 	private String email;
 	
@@ -42,5 +46,7 @@ public class EmployeeDetails {
 	
 	@NotNull
 	private String designation;
+	
+	private String resumeFilePath;
 
 }

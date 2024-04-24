@@ -1,13 +1,17 @@
 <template>
-  <div>Hello</div>
+  <div>Hello
+    <chat-gpt></chat-gpt>
+  </div>
 </template>
 
 <script>
+import ChatGpt from './components/ChatGpt.vue'
 
 
 export default {
-  name: 'App',
   
+  name: 'App',
+  components:{ChatGpt}
 }
 </script>
 

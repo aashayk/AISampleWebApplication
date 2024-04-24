@@ -32,15 +32,17 @@ class EmployeeServiceTest {
 	String firstName = "Unit";
 	String lastName = "Tester";
 	Short age = 25;
+	short yearsOfExperience = 3;
 	String email = "tester@gmail.com";
 	String mobile = "9988998899";
 	String designation = "Software Engineer";
+	String resumeFilePath = "";
 	EmployeeDetails emp;
 	List<EmployeeDetails> listEmp;
 	
 	@BeforeEach
 	void setup() {
-		emp = new EmployeeDetails(id, firstName, lastName, age, email, mobile, designation);
+		emp = new EmployeeDetails(id, firstName, lastName, age,yearsOfExperience, email, mobile, designation,resumeFilePath);
 		listEmp = new ArrayList<>();
 		listEmp.add(emp);
 	}
