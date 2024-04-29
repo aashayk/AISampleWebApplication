@@ -1,20 +1,25 @@
 <template>
-  <div>Hello
-    <chat-gpt></chat-gpt>
+  <div id="app">
+    <nav>
+      <router-link to="/"></router-link>
+      <router-link to="/upload"></router-link>
+    </nav>
+    <router-view></router-view>
   </div>
 </template>
-
+ 
 <script>
-import ChatGpt from './components/ChatGpt.vue'
-
-
+ 
+ 
+ 
 export default {
-  
+ 
+ 
   name: 'App',
-  components:{ChatGpt}
+ 
 }
 </script>
-
+ 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
