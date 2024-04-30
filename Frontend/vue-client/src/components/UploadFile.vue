@@ -29,7 +29,7 @@ export default {
             file: null,
             summary: null,
             available: false,
-            email: "virat@gmail.com",
+            email: localStorage.getItem('email'),
         }
     },
     methods: {
@@ -59,7 +59,7 @@ export default {
                     this.available = true;
                     this.summary = response.data;
                     console.log(this.summary);
-                    // localStorage.clear();
+                    localStorage.clear();
                 } else {
                     throw new Error(`uploadFile: Received status code ${response.status}`);
                 }
@@ -70,6 +70,7 @@ export default {
             }
         }
     },
+    
  
 }
 </script>
