@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.resume.dao.EmployeeDao;
 import com.example.resume.entity.EmployeeDetails;
+import com.example.resume.exception.BadRequestException;
 import com.example.resume.services.EmailService;
 import com.example.resume.services.EmployeeService;
 
@@ -47,6 +48,9 @@ public class FileUploadController {
 	@Value("${gemini.question}")
 	private String question;
 	
+	@Value("${mail.to}")
+	private String to;
+	
 	@Autowired
 	private GeminiProVisionController gemini;
 	
@@ -59,6 +63,8 @@ public class FileUploadController {
 		log.info(email);
 		EmployeeDetails emp = service.getByEmail(email);
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		if(!fileName.endsWith(".pdf"))
+			throw new BadRequestException("Only pdf file allowed");
 		String filePath = Paths.get(uploadDir, fileName).toString();
 		log.info(filePath);
 		try {
@@ -66,16 +72,42 @@ public class FileUploadController {
 			emp.setResumeFilePath(filePath);
 			dao.save(emp);
 //			String summary = generateSummary(email);
-//			String summary = gemini.file(file,question);
-			String summary = "lorel ipsum";
-//			String subject = "Resume Summary of "+emp.getFirstName()+" "+emp.getLastName()+ ", "+LocalDate.now();
-//			emailService.sendEmail(subject, email, summary);
+			String summary = gemini.file(file,question);
+//			String summary = "lorel ipsum";
+			sendResume(emp, summary);
 			return new ResponseEntity<>(summary, HttpStatus.OK);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
 		}
 	}
+	
+	private void sendResume(EmployeeDetails emp,String summary) {
+		String[] passages = summary.split("\n");
+		StringBuilder sb = new StringBuilder();
+		sb.append("<p>");
+		for (int i=0;i<passages.length;i++) {
+			sb.append(passages[i]);
+			if(i<passages.length-1) {
+				sb.append("<br>");
+			}
+		}
+		sb.append("</p>");
+		summary=sb.toString();
+		String message = "<p style='background-color: lemonchiffon;'>A candidate has submitted application. Please review it.<br/><b> Applicant Name: "
+							+ emp.getFirstName()+ " "+ emp.getLastName()
+							+"<br/>Age:"+ emp.getAge()
+							+"<br/> Years of Experience: "+emp.getYearsOfExperience() 
+							+"<br/> Email Address: "+emp.getEmail() 
+							+"<br/> Mobile Number: "+emp.getMobile() 
+							+"<br/> Designation: "+emp.getDesignation() 
+							+"</b><br/><h3>Summary of Candidate's resume :<h3/>"
+							+"<p/>"
+							+summary;
+		String subject = "Job Application of "+emp.getFirstName()+" "+emp.getLastName()+ ", "+LocalDate.now();
+		emailService.sendEmail(subject, to, message);
+	}
+	
 
 //	@GetMapping("/summary/{email}")
 //	public String generateSummary(@PathVariable String email) throws Exception {

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.resume.dao.EmployeeDao;
 import com.example.resume.entity.EmployeeDetails;
 import com.example.resume.exception.AlreadyExistException;
+import com.example.resume.exception.BadRequestException;
 import com.example.resume.exception.ErrorMessage;
 import com.example.resume.exception.RecordNotFoundException;
 
@@ -45,8 +46,16 @@ public class EmployeeService {
 	public EmployeeDetails submit(EmployeeDetails emp) {
 		if (dao.findByEmail(emp.getEmail()) != null)
 			throw new AlreadyExistException(ErrorMessage.ALREADY_EXIST);
+		if((emp.getAge()<21) || (emp.getAge()>60))
+			throw new BadRequestException("Age of applicant should be between 21 and 60");
+		if(emp.getYearsOfExperience()<2)
+			throw new BadRequestException("Minimum 2 years experience required");
 		return dao.save(emp);
 
 	}
-
+	public String deleteEmployee(String email) {
+		EmployeeDetails emp = getByEmail(email);
+		dao.delete(emp);
+		return "Employee deleted successfully";
+	}
 }

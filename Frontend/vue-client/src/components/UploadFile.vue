@@ -4,15 +4,18 @@
             <form action="/">
                 <h1>Upload Resume</h1>
                 <div class="info">
-                    <input type="file" ref="fileInput" @change="handleFileChange">
+                    <input v-bind:disabled="available" type="file" accept=".pdf" ref="fileInput" @change="handleFileChange">
                 </div>
-                <button @click="uploadFile($event)">Upload Resume</button>
+                <button v-bind:disabled="available" @click="uploadFile($event)">Upload Resume</button>
+                <br/><br><button @click="goHome()">Go Home</button>
             </form>
         </div>
         <div v-if="available">
             <form action="/">
                 <h1 v-if="available">Summary</h1>
-                <p v-if="available">{{ summary }}</p>
+                <div v-if="available">
+                    <p v-for="(passage,index) in summary.split('\n')" :key="index">{{ passage }} </p>
+                </div>
             </form>
         </div>
     </div>
@@ -21,6 +24,8 @@
 <script>
  
 import axios from 'axios';
+import 'vue3-toastify/dist/index.css'
+import {toast} from 'vue3-toastify'
  
 export default {
     name: 'UploadFile',
@@ -30,9 +35,16 @@ export default {
             summary: null,
             available: false,
             email: localStorage.getItem('email'),
+            // email:'aashay@gmail.com',
         }
     },
     methods: {
+        goHome(){
+            localStorage.clear();
+            this.email=null
+            this.$router.push('/')
+            
+        },
         handleFileChange(event) {
             this.file = event.target.files[0];
             console.log(event.target.files[0]);
@@ -49,6 +61,11 @@ export default {
                 if (this.file === null) {
                     throw new Error('uploadFile: this.file is null');
                 }
+
+                if(!this.file.name.toLowerCase().endsWith('.pdf')){
+                    toast.warning('Only pdf are allowed');
+                    throw new Error("Only pdf files are allowed");
+                }
  
                 const formData = new FormData();
                 formData.append('file', this.file);
@@ -56,10 +73,12 @@ export default {
                 const response = await axios.post("http://localhost:8085/upload/"+this.email, formData);
  
                 if (response.status === 200) {
+                    toast.success('Resume uploaded succesfully !!')
                     this.available = true;
                     this.summary = response.data;
                     console.log(this.summary);
                     localStorage.clear();
+                    this.email=null
                 } else {
                     throw new Error(`uploadFile: Received status code ${response.status}`);
                 }
@@ -70,7 +89,9 @@ export default {
             }
         }
     },
-    
+    created(){
+        console.log(this.email);
+    },
  
 }
 </script>

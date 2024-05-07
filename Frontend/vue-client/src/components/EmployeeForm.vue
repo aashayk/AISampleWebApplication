@@ -14,7 +14,7 @@
               <input type="text" id="lastName" v-model="formData.lastName" placeholder="Last Name" required>
 
               <input type="number" id="age" v-model.number="formData.age" placeholder="Age" required>
-
+              
               <input type="number" id="yearsOfExperience" v-model.number="formData.yearsOfExperience"
                   placeholder="Years Of Experience" required>
 
@@ -31,6 +31,8 @@
 
 <script>
 import axios from 'axios'
+import 'vue3-toastify/dist/index.css'
+import {toast} from 'vue3-toastify'
 
 export default {
   name: 'Employee-Form',
@@ -57,9 +59,15 @@ export default {
 
               })
               .catch(error => {
-                  console.log(error)
+                  console.log(error.response.data)
+                  toast.error(error.response.data)
               })
       }
+  },
+  created(){
+    toast("Please enter your details",{
+      autoClose:1000
+    });
   },
   
 }
